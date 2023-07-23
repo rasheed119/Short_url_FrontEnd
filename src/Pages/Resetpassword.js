@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import { Link } from "react-router-dom";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
@@ -16,18 +14,10 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { api } from "../config";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-const login_validation_schema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Invalid email")
-    .test("com", "Invalid email", (value) => {
-      if (value && !value.endsWith(".com")) {
-        return false;
-      }
-      return true;
-    })
-    .required("Email is required"),
+const reset_password_validation_schema = yup.object().shape({
+  email: yup.string(),
   newpassword: yup
     .string()
     .required("Password is required")
@@ -36,10 +26,7 @@ const login_validation_schema = yup.object().shape({
     .string()
     .oneOf([yup.ref("newpassword"), null], "Password must match")
     .required("Reenter Password is required"),
-  token: yup
-    .string()
-    .min(10, "Token must be 10 Characters Long")
-    .required("Token is Required"),
+  token: yup.string(),
 });
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -47,17 +34,22 @@ const login_validation_schema = yup.object().shape({
 const defaultTheme = createTheme();
 
 function Resetpassword() {
+  const location = useLocation();
+  const searchparams = new URLSearchParams(location.search);
+  const email = searchparams.get("email");
+  const token = searchparams.get("token");
+  console.log(email,token);
   const navigate = useNavigate();
   const [show, setshow] = React.useState(true);
   const { values, handleChange, handleSubmit, handleBlur, errors, touched } =
     useFormik({
       initialValues: {
-        email: "",
+        email,
         newpassword: "",
         reenter_newpassword: "",
-        token: "",
+        token,
       },
-      validationSchema: login_validation_schema,
+      validationSchema: reset_password_validation_schema,
       onSubmit: async (user_data) => {
         try {
           setshow(false);
@@ -99,30 +91,6 @@ function Resetpassword() {
             noValidate
             sx={{ mt: 1 }}
           >
-            {touched.email && errors.email ? (
-              <TextField
-                error
-                margin="normal"
-                id="outlined-error"
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-                helperText={errors.email}
-              />
-            ) : (
-              <TextField
-                margin="normal"
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-              />
-            )}
             {touched.newpassword && errors.newpassword ? (
               <TextField
                 error
@@ -175,32 +143,7 @@ function Resetpassword() {
                 type="password"
               />
             )}
-            {touched.token && errors.token ? (
-              <TextField
-                error
-                margin="normal"
-                fullWidth
-                name="token"
-                label="Token"
-                onChange={handleChange}
-                value={values.token}
-                onBlur={handleBlur}
-                type="text"
-                id="outlined-error"
-                helperText={errors.token}
-              />
-            ) : (
-              <TextField
-                margin="normal"
-                fullWidth
-                name="token"
-                label="Token"
-                onChange={handleChange}
-                value={values.token}
-                onBlur={handleBlur}
-                type="text"
-              />
-            )}
+
             {show ? (
               <Button
                 type="submit"
