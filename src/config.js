@@ -1,1 +1,1 @@
-export const api = "https://urlsshort.vercel.app";
+export const api = "https://shorturl-backend-u4dw.onrender.com";

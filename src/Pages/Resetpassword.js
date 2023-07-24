@@ -38,7 +38,7 @@ function Resetpassword() {
   const searchparams = new URLSearchParams(location.search);
   const email = searchparams.get("email");
   const token = searchparams.get("token");
-  console.log(email,token);
+  console.log(email, token);
   const navigate = useNavigate();
   const [show, setshow] = React.useState(true);
   const { values, handleChange, handleSubmit, handleBlur, errors, touched } =
@@ -62,7 +62,11 @@ function Resetpassword() {
           navigate("/");
         } catch (error) {
           setshow(true);
-          alert(error.response.data.message);
+          if (error.response.data.message === "jwt expired") {
+            alert("The Link was expired");
+          } else {
+            alert(error.response.data.message);
+          }
         }
       },
     });

@@ -56,10 +56,11 @@ function Login() {
     setshow(false);
     try {
       const data = await axios.post(`${api}/users/login`, userdata);
+      console.log(data.data)
       alert(data.data.message);
       if (data.data.message === "Login Successfull") {
         if (data.data.activeStatus === true) {
-          setcookie("access_token", data.data.token);
+        setcookie("access_token",data.data.token)
           window.localStorage.setItem("userID",data.data.user_id)
           navigate("/dashboard");
         } else {

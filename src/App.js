@@ -6,7 +6,7 @@ import ForgotPassword from "./Pages/ForgotPassword";
 import Activateaccount from "./Pages/activateaccount";
 import Dashboard from "./Pages/Dashboard";
 import Resetpassword from "./Pages/Resetpassword";
-import ResendMail from "./Pages/ResendMail";
+import CreateUrl from "./Pages/CreateUrl";
 
 function App() {
   return (
@@ -14,10 +14,10 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route exact path="/" element={<Login />} />
       <Route path="/forgotpassword" element={<ForgotPassword />} />
-      <Route path="/activateaccount" element={<Activateaccount />} />
+      <Route path="/activateaccount/:email" element={<Activateaccount />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/resetpassword" element={<Resetpassword />} />
-      <Route path="/resendmail" element={<ResendMail/>} />
+      <Route path="/createurl" element={<CreateUrl />} />
     </Routes>
   );
 }

@@ -58,14 +58,17 @@ function Register() {
     });
 
   async function register_submit(user_data) {
-    setshow(false)
+    setshow(false);
     try {
       const register = await axios.post(`${api}/users/register`, user_data);
       alert(register.data.message);
-      navigate("/")
+      if (register.data.message !== "User already Exsist") {
+        navigate(`/`);
+      }
+      setshow(true);
     } catch (error) {
       console.log(error);
-      setshow(true)
+      setshow(true);
     }
   }
 

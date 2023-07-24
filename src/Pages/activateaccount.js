@@ -1,61 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import * as yup from "yup";
-import { useFormik } from "formik";
 import axios from "axios";
 import { api } from "../config";
-import { useNavigate } from "react-router-dom";
-import Loading from "../Components/Loading";
+import { useParams, Link } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
-const account_activation_validation_schema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Invalid email")
-    .test("com", "Invalid email", (value) => {
-      if (value && !value.endsWith(".com")) {
-        return false;
-      }
-      return true;
-    })
-    .required("Email is required"),
-});
-
 function Activateaccount() {
-  const [show, setshow] = useState(true);
+  const { email } = useParams();
+  const [response, Setresponse] = useState("");
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const getdata = async () => {
+      const data = await axios.put(`${api}/users/activate_account`, { email });
+      //Setresponse(data.data.message);
+      Setresponse(data.data.message);
+    };
+    getdata();
+  }, []);
 
-  const { values, handleChange, handleSubmit, handleBlur, errors, touched } =
-    useFormik({
-      initialValues: {
-        email: "",
-      },
-      validationSchema: account_activation_validation_schema,
-      onSubmit: async (user_data) => {
-        try {
-          setshow(false);
-          const data = await axios.put(
-            `${api}/users/activate_account`,
-            user_data
-          );
-          alert(data.data.message);
-          navigate("/");
-        } catch (error) {
-          setshow(true);
-          console.log(error.message);
-        }
-      },
-    });
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -75,47 +44,23 @@ function Activateaccount() {
             Account Activation
           </Typography>
           <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
+            sx={{
+              mt: 1,
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
           >
-            {touched.email && errors.email ? (
-              <TextField
-                error
-                margin="normal"
-                id="outlined-error"
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-                helperText={errors.email}
-              />
-            ) : (
-              <TextField
-                margin="normal"
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-              />
-            )}
-            {show ? (
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Activate account
-              </Button>
-            ) : (
-              <Loading />
-            )}
+            <img
+              src="https://cdn.pixabay.com/photo/2017/01/13/01/22/ok-1976099_1280.png"
+              width="100"
+              height="100"
+              alt="Success"
+            />
+            <Typography>{response}</Typography>
+            <Typography sx={{ mt: 1 }}>
+              <Link to="/">Back to Login page</Link>
+            </Typography>
           </Box>
         </Box>
       </Container>
