@@ -142,6 +142,14 @@ function CreateUrl() {
           <React.Fragment>
             <CssBaseline />
             <Container fixed>
+              <Typography
+                sx={{ mt: 2, mb: 2 }}
+                variant="h5"
+                fontFamily="cursive"
+                component="div"
+              >
+                Created Url will display below :
+              </Typography>
               <Box sx={{ flexGrow: 1 }}>
                 <Grid
                   container
@@ -149,7 +157,7 @@ function CreateUrl() {
                   columns={{ xs: 1, sm: 4, md: 12 }}
                 >
                   {url && url.length === 0 ? (
-                    <Stack spacing={1}>
+                    <Stack spacing={1} sx={{ mt: 5 }}>
                       <Skeleton variant="rectangular" width={210} height={60} />
                       <Skeleton variant="rounded" width={210} height={60} />
                     </Stack>
@@ -162,17 +170,22 @@ function CreateUrl() {
                             maxWidth: 345,
                             ":hover": { boxShadow: 20 },
                             mt: 5,
+                            borderRadius : "10"
                           }}
                         >
-                          <CardHeader title="Short Url" />
                           <Typography
                             paragraph
-                            sx={{ mx: 1, textAlign: "center" }}
+                            fontFamily="cursive"
+                            sx={{ mx: 1, textAlign: "center",mt:1 }}
                           >
                             Click Count : {obj.count}
                           </Typography>
                           <CardContent>
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography
+                              variant="body2"
+                              fontFamily="cursive"
+                              color="text.secondary"
+                            >
                               <a
                                 href={obj.shorturl}
                                 target="_blank"
@@ -199,9 +212,12 @@ function CreateUrl() {
                             sx={{ maxHeight: "50vh", overflowY: "auto" }}
                           >
                             <CardContent>
-                              <Typography paragraph>Long Url : </Typography>
+                              <Typography fontFamily="cursive" paragraph>
+                                Long Url :{" "}
+                              </Typography>
                               <Typography
                                 paragraph
+                                fontFamily="cursive"
                                 style={{ overflowWrap: "break-word" }}
                               >
                                 <a

@@ -43,8 +43,19 @@ function Dashboard() {
           }}
         >
           <CssBaseline />
+          <Box sx={{ mt: 2, mb: 2 }}>
+            {data ? (
+              <>
+                <Typography variant="h4" fontFamily="cursive">
+                  Welcome, {data.firstName} {data.lastName}
+                </Typography>
+              </>
+            ) : (
+              ""
+            )}
+          </Box>
           <Box sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography variant="h5" component="h1">
+            <Typography variant="h5" fontFamily="cursive" component="h1">
               Dashboard
             </Typography>
           </Box>
@@ -55,6 +66,7 @@ function Dashboard() {
                   <Typography
                     sx={{ fontSize: 14 }}
                     color="text.secondary"
+                    fontFamily="cursive"
                     gutterBottom
                   >
                     Short Urls Stats
@@ -64,6 +76,7 @@ function Dashboard() {
                       <Typography
                         sx={{ mt: 2, mb: 2 }}
                         variant="h5"
+                        fontFamily="cursive"
                         component="div"
                       >
                         Total Urls : {data.totalurls}
@@ -71,6 +84,7 @@ function Dashboard() {
                       <Typography
                         sx={{ mt: 2, mb: 2 }}
                         variant="h5"
+                        fontFamily="cursive"
                         component="div"
                       >
                         Total Clicks : {data.totalClicks}
