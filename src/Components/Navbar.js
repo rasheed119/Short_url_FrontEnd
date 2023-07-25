@@ -46,7 +46,7 @@ function Navbar() {
           <ListItem disablePadding>
             <ListItemButton
               sx={{ textAlign: "center" }}
-              onClick={() => navigate("/auth")}
+              onClick={() => navigate("/")}
             >
               <ListItemText>Login</ListItemText>
             </ListItemButton>
@@ -122,7 +122,7 @@ function Navbar() {
               ) : (
                 <Button
                   sx={{ color: "#fff" }}
-                  onClick={() => navigate("/auth")}
+                  onClick={() => navigate("/")}
                 >
                   Login/Register
                 </Button>
