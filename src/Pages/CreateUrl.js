@@ -11,7 +11,6 @@ import axios from "axios";
 import { api } from "../config";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
 import Grid from "@mui/material/Grid";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
