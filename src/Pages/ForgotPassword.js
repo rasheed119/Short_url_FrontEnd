@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,6 +14,8 @@ import axios from "axios";
 import { api } from "../config";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Components/Loading";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const defaultTheme = createTheme();
 
@@ -31,7 +33,10 @@ const account_activation_validation_schema = yup.object().shape({
 });
 
 function ForgotPassword() {
-  const [show, setshow] = React.useState(true);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [show, setshow] = useState(true);
 
   const navigate = useNavigate();
 
@@ -48,15 +53,24 @@ function ForgotPassword() {
             `${api}/users/forgot_password`,
             user_data
           );
-          alert(data.data.message);
-          navigate("/");
+          setSnackbarMessage(data.data.message);
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true)
+          setTimeout(()=>{
+            navigate("/")
+          },4000)
         } catch (error) {
           setshow(true);
           console.log(error.response.data.message);
-          alert(error.response.data.message);
+          setSnackbarSeverity("error");
+          setSnackbarMessage(error.response.data.message);
+          setSnackbarOpen(true);
         }
       },
     });
+    function handleCloseSnackbar() {
+      setSnackbarOpen(false);
+    }
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
@@ -118,6 +132,21 @@ function ForgotPassword() {
               <Loading />
             )}
           </Box>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={4000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={handleCloseSnackbar}
+              severity={snackbarSeverity}
+            >
+              {snackbarMessage}
+            </MuiAlert>
+          </Snackbar>
         </Box>
       </Container>
     </ThemeProvider>

@@ -21,6 +21,8 @@ import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import * as yup from "yup";
 import { useFormik } from "formik";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -38,6 +40,9 @@ const url_validation_schema = yup.object({
 });
 
 function CreateUrl() {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [cookies] = useCookies(["access_token"]);
   const [url, seturl] = useState("");
   const userID = window.localStorage.getItem("userID");
@@ -70,9 +75,10 @@ function CreateUrl() {
               },
             }
           );
-          alert(response.data.message);
+          setSnackbarSeverity("success");
+          setSnackbarMessage(response.data.message);
+          setSnackbarOpen(true);
           values.long_url = "";
-          getdata();
         } catch (error) {
           console.log(error.message);
         }
@@ -91,7 +97,10 @@ function CreateUrl() {
   useEffect(() => {
     getdata();
   }, []);
-
+  function handleCloseSnackbar() {
+    getdata();
+    setSnackbarOpen(false);
+  }
   return (
     <>
       <Navbar />
@@ -138,6 +147,21 @@ function CreateUrl() {
           <Button variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={4000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={handleCloseSnackbar}
+              severity={snackbarSeverity}
+            >
+              {snackbarMessage}
+            </MuiAlert>
+          </Snackbar>
           <React.Fragment>
             <CssBaseline />
             <Container fixed>
@@ -169,13 +193,13 @@ function CreateUrl() {
                             maxWidth: 345,
                             ":hover": { boxShadow: 20 },
                             mt: 5,
-                            borderRadius : "10"
+                            borderRadius: "10",
                           }}
                         >
                           <Typography
                             paragraph
                             fontFamily="cursive"
-                            sx={{ mx: 1, textAlign: "center",mt:1 }}
+                            sx={{ mx: 1, textAlign: "center", mt: 1 }}
                           >
                             Click Count : {obj.count}
                           </Typography>

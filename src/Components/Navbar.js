@@ -15,10 +15,15 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const drawerWidth = 240;
 
 function Navbar() {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [Cookie, setCookie] = useCookies(["access_token"]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -32,8 +37,17 @@ function Navbar() {
   const handle_login = () => {
     setCookie("access_token", "");
     window.localStorage.removeItem("userID", "");
-    navigate("/");
+    setSnackbarMessage("Logging Out...");
+    setSnackbarSeverity("warning");
+    setSnackbarOpen(true)
+    setTimeout(() => {
+      navigate("/");
+    }, 4000);
   };
+
+  function handleCloseSnackbar() {
+    setSnackbarOpen(false);
+  }
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
@@ -75,7 +89,6 @@ function Navbar() {
             <ListItemText>Dashboard</ListItemText>
           </ListItemButton>
         </ListItem>
-
       </List>
     </Box>
   );
@@ -103,7 +116,10 @@ function Navbar() {
               Short Url
             </Typography>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              <Button sx={{ color: "#fff" }} onClick={() => navigate("/dashboard")}>
+              <Button
+                sx={{ color: "#fff" }}
+                onClick={() => navigate("/dashboard")}
+              >
                 Dashboard
               </Button>
 
@@ -114,16 +130,12 @@ function Navbar() {
                 Create Short Url
               </Button>
 
-
               {Cookie.access_token ? (
                 <Button sx={{ color: "#fff" }} onClick={handle_login}>
                   Log out
                 </Button>
               ) : (
-                <Button
-                  sx={{ color: "#fff" }}
-                  onClick={() => navigate("/")}
-                >
+                <Button sx={{ color: "#fff" }} onClick={() => navigate("/")}>
                   Login/Register
                 </Button>
               )}
@@ -149,6 +161,21 @@ function Navbar() {
             {drawer}
           </Drawer>
         </Box>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={5000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleCloseSnackbar}
+            severity={snackbarSeverity}
+          >
+            {snackbarMessage}
+          </MuiAlert>
+        </Snackbar>
       </Box>
     </>
   );

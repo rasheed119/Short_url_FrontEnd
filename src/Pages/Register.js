@@ -16,6 +16,8 @@ import axios from "axios";
 import { api } from "../config";
 import { useNavigate } from "react-router-dom";
 import Loading from "../Components/Loading";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
@@ -41,6 +43,9 @@ const register_validation_schema = yup.object().shape({
 });
 
 function Register() {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [show, setshow] = useState(true);
   const navigate = useNavigate();
   const { values, handleChange, handleSubmit, handleBlur, errors, touched } =
@@ -61,15 +66,29 @@ function Register() {
     setshow(false);
     try {
       const register = await axios.post(`${api}/users/register`, user_data);
-      alert(register.data.message);
       if (register.data.message !== "User already Exsist") {
-        navigate(`/`);
+        setSnackbarSeverity("success");
+        setSnackbarMessage("Check Your mail to activate account , Redirecting to Login Page...")
+        setSnackbarOpen(true);
+        setTimeout(() => {
+          navigate(`/`);
+        },5000);
+        
+      } else {
+        setSnackbarSeverity("error");
+        setSnackbarMessage(
+          register.data.message
+        );
+        setSnackbarOpen(true);
       }
       setshow(true);
     } catch (error) {
       console.log(error);
       setshow(true);
     }
+  }
+  function handleCloseSnackbar() {
+    setSnackbarOpen(false);
   }
 
   return (
@@ -220,6 +239,21 @@ function Register() {
               </Grid>
             </Grid>
           </Box>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={5000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          >
+            <MuiAlert
+              elevation={6}
+              variant="filled"
+              onClose={handleCloseSnackbar}
+              severity={snackbarSeverity}
+            >
+              {snackbarMessage}
+            </MuiAlert>
+          </Snackbar>
         </Box>
       </Container>
     </ThemeProvider>
